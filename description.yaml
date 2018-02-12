@@ -1,0 +1,16 @@
+# This file describes the converter
+name: template_csv_converter
+namespace: citrine/ingest                      # Any valid python key (should be unique)
+version: auto                               # Please use 3-number versions
+description: Converts a specialized CSV/XLSX or XLS file to a physical information file. # Any string
+displayName: "Citrine: Template CSV"
+
+arguments:                  # These are the arguments for the convert method
+  
+## Valid types:
+# String
+# Integer
+# Real
+# List[n][t], where n is the number of elements in the list and t is the corresponding primitive type
+# e.g. List[3][Real] is a vector of length three
+# e.g. List[2][String] is a list of two strings

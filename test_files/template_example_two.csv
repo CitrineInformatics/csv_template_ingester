@@ -1,0 +1,2 @@
+NAME:,NAME,IDENTIFIER: ID,PROPERTY: Hardness (HV),PROPERTY: Strength \(Tensile\) (MPa),CONDITION: Temperature (K),PROPERTY: SMILES
+Testing Material,"[Sample 1, Sample 1a]",12,123,"[456, 500, 700]","[700, 500, 300]",[C]
