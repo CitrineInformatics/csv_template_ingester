@@ -1,5 +1,4 @@
 import re
-import sys
 
 
 def normalize(string):
@@ -49,7 +48,7 @@ def decode_string(string):
                 try:
                     string = str(string).decode('mac-roman').encode('utf-8')
                 except UnicodeDecodeError:
-                    sys.exit('Unable to parse this file as the encoding is not recognized.\n')
+                    raise IOError('Unable to parse this file as the encoding is not recognized.')
     except AttributeError:
         # str.decode() does not exist in Python 3, but str is always Unicode
         pass
