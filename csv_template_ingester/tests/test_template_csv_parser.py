@@ -167,6 +167,14 @@ def test_add_identifier():
     assert syst.ids[1].value == '5678'
 
 
+def test_add_classification():
+    syst = add_classification(ChemicalSystem(), '1234', ['', 'Class2'], 0)
+    syst = add_classification(syst, '5678', ['', 'Class2'], 1)
+    assert syst.classifications[0].value == '1234'
+    assert syst.classifications[1].name == 'Class2'
+    assert syst.classifications[1].value == '5678'
+
+
 def test_add_preparation_step_detail():
     syst = add_preparation_step_detail(ChemicalSystem(preparation=[ProcessStep(name='Annealing')]), '1200',
                                        ['Temperature'], ['K'], 0)

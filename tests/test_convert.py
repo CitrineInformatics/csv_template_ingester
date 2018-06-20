@@ -6,6 +6,8 @@ def test_convert():
     pifs = list(convert(["./test_files/template_example.csv"]))
     assert pifs[0].names[0] == 'P20 Tool steel'
     assert pifs[0].sub_systems[0].names[0] == 'Martensite'
+    assert pifs[0].classifications[0].name == 'Test Classification'
+    assert pifs[0].classifications[0].value == 'Solvent'
     assert pifs[0].sub_systems[0].quantity.ideal_mass_percent.value == '80'
     assert pifs[0].contacts[0].name == 'Jo Hill'
     assert pifs[0].contacts[0].email == 'jo@citrine.io'
