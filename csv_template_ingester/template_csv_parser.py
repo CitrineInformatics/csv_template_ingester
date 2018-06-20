@@ -44,7 +44,7 @@ def split_on_keyword(string):
     """
 
     pieces = re.split(
-            r'(name|formula|identifier|figurenumber|tablenumber|tablecaption|figurecaption|composition|processstep|processstepdetail|preparationstepdetail|method|datatype|file|idealcomposition|actualcomposition|reference|preparationstep|property|condition|idealquantity|actualquantity)',
+            r'(name|formula|identifier|figurenumber|tablenumber|tablecaption|figurecaption|composition|processstep|processstepdetail|preparationstepdetail|method|datatype|file|idealcomposition|actualcomposition|reference|preparationstep|property|condition|idealquantity|actualquantity|classification)',
             normalize(string))
 
     return pieces
@@ -202,6 +202,9 @@ def add_fields(keywords, names, units, systs, sys_dict, row):
 
         elif 'identifier' == normalize(keywords[j]):
             systm = add_identifier(systm, cell, names, j)
+
+        elif 'classification' == normalize(keywords[j]):
+            systm = add_classification(systm, cell, names, j)
 
         elif 'property' == normalize(keywords[j]):
             systm = add_property(systm, cell, names, units, j)
@@ -772,5 +775,35 @@ def add_identifier(systm, identifier, names, column_index):
             systm.ids.append(ident)
         else:
             systm.ids = [ident]
+
+    return systm
+
+
+def add_classification(systm, classification, names, column_index):
+    """
+    Adds an ID to a system
+
+    :param systm: system to update
+    :param classification: classification to add
+    :param names: list of names of the columns
+    :param column_index: index of the column to use
+    :return: updated system with classification info
+    """
+
+    if classification:
+
+        clss = Classification()
+        if names[column_index]:
+            clss.name = names[column_index]
+        else:
+            clss.name = 'Classification'
+
+        clss.value = classification
+
+        if systm.classifications:
+            systm.classifications = listify(systm.classifications)
+            systm.classifications.append(clss)
+        else:
+            systm.classifications = [clss]
 
     return systm
