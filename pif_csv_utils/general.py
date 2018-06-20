@@ -1,5 +1,4 @@
 import re
-import sys
 
 
 def normalize(string):
@@ -38,16 +37,20 @@ def decode_string(string):
     :return: decoded string
     """
 
-    # string = string.replace('\xef\xbb\xbf', '')
     try:
-        string = string.decode('utf-8').encode('utf-8')
-    except UnicodeDecodeError:
+        # string = string.replace('\xef\xbb\xbf', '')
         try:
-            string = string.decode('latin-1').encode('utf-8')
+            string = string.decode('utf-8').encode('utf-8')
         except UnicodeDecodeError:
             try:
-                string = str(string).decode('mac-roman').encode('utf-8')
+                string = string.decode('latin-1').encode('utf-8')
             except UnicodeDecodeError:
-                sys.exit('Unable to parse this file as the encoding is not recognized.\n')
+                try:
+                    string = str(string).decode('mac-roman').encode('utf-8')
+                except UnicodeDecodeError:
+                    raise IOError('Unable to parse this file as the encoding is not recognized.')
+    except AttributeError:
+        # str.decode() does not exist in Python 3, but str is always Unicode
+        pass
 
     return string

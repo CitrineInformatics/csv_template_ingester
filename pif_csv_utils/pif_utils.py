@@ -1,7 +1,6 @@
 # coding: utf-8
 from pypif.obj import *
 from pif_csv_utils.general import *
-import sys
 
 
 def add_uid(systm, uid):
@@ -14,10 +13,10 @@ def add_uid(systm, uid):
     """
 
     if systm.uid:
-        sys.exit(
+        raise ValueError(
             'You are attempting to add a UID to a system that already has one. Each system can only have 1 UID.\n')
     elif isinstance(uid, list):
-        sys.exit('You are trying to add multiple UIDs to a system. Each ChemicalSystem can only have 1 UID')
+        raise ValueError('You are trying to add multiple UIDs to a system. Each ChemicalSystem can only have 1 UID')
     elif uid:
         systm.uid = re.sub(r'\W', '', uid)
         print ('UIDs manually added. If two systems have the same then one will be overwritten by the information in the other. Please make sure all UIDs are unique.')
@@ -34,13 +33,13 @@ def add_formula(systm, formula):
     :return: system updated with the formula info
     """
     if not isinstance(systm, ChemicalSystem):
-        sys.exit('A chemical formula can only be added to a ChemicalSystem')
+        raise TypeError('A chemical formula can only be added to a ChemicalSystem')
 
     if systm.chemical_formula:
-        sys.exit(
+        raise ValueError(
             'You are attempting to add a chemical formula to a system that already has one. Each ChemicalSystem can only have 1 formula.\n')
     elif isinstance(formula, list):
-        sys.exit('You are trying to add multiple formulas to a system. Each ChemicalSystem can only have 1 formula')
+        raise ValueError('You are trying to add multiple formulas to a system. Each ChemicalSystem can only have 1 formula')
     elif formula:
         systm.chemical_formula = formula
 
@@ -81,7 +80,7 @@ def add_method(systm, method_value):
         if systm.properties:
             prop = systm.properties[-1]
         else:
-            sys.exit(
+            raise ValueError(
                 'Method details provided before a property was specified. Method columns must appear to the right of the property they belong to.\n')
 
         if prop.methods:
@@ -113,7 +112,7 @@ def add_number(systm, number_value, source_type):
         if systm.properties:
             prop = systm.properties[-1]
         else:
-            sys.exit(
+            raise ValueError(
                 'Number details provided before a property was specified. Number columns must appear to the right of the property they belong to.\n')
 
         if prop.references:
@@ -148,7 +147,7 @@ def add_caption(systm, caption_value, source_type):
         if systm.properties:
             prop = systm.properties[-1]
         else:
-            sys.exit(
+            raise ValueError(
                 'Caption details provided before a property was specified. Caption columns must appear to the right of the property they belong to.\n')
 
         if prop.references:
@@ -184,7 +183,7 @@ def add_datatype(systm, datatype):
         if systm.properties:
             prop = systm.properties[-1]
         else:
-            sys.exit(
+            raise ValueError(
                 'Data type provided before a property was specified. Data type columns must appear to the right of the property that they belong to.\n')
 
         prop.data_type = datatype
