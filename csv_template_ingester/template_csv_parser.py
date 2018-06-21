@@ -44,7 +44,7 @@ def split_on_keyword(string):
     """
 
     pieces = re.split(
-            r'(name|formula|identifier|figurenumber|tablenumber|tablecaption|figurecaption|composition|processstep|processstepdetail|preparationstepdetail|method|datatype|file|idealcomposition|actualcomposition|reference|preparationstep|property|condition|idealquantity|actualquantity)',
+            r'(name|formula|identifier|figurenumber|tablenumber|tablecaption|figurecaption|composition|processstep|processstepdetail|preparationstepdetail|method|datatype|file|idealcomposition|actualcomposition|reference|preparationstep|property|condition|idealquantity|actualquantity|classification)',
             normalize(string))
 
     return pieces
@@ -60,7 +60,7 @@ def get_keyword(column_header):
 
     if ':' in column_header:
         if column_header.count(':') > 2:
-            sys.exit(
+            raise ValueError(
                 'Header cells should contain a maximum of one colon (:) to separate the keyword from the column name.\n')
         keyword = column_header.split(':')[0]
         column_header = column_header.split(':')[1]
@@ -203,6 +203,9 @@ def add_fields(keywords, names, units, systs, sys_dict, row):
         elif 'identifier' == normalize(keywords[j]):
             systm = add_identifier(systm, cell, names, j)
 
+        elif 'classification' == normalize(keywords[j]):
+            systm = add_classification(systm, cell, names, j)
+
         elif 'property' == normalize(keywords[j]):
             systm = add_property(systm, cell, names, units, j)
 
@@ -258,7 +261,7 @@ def add_fields(keywords, names, units, systs, sys_dict, row):
             unknown += ', %s' % j
 
     if any(unknown):
-        sys.stdout.write('Unknown header(s) for column(s) %s.\n' % (unknown[1:]))
+        print ('Unknown header(s) for column(s) %s.\n' % (unknown[1:]))
 
     return sys_dict, all_condition
 
@@ -364,7 +367,7 @@ def add_actual_composition(systm, composition_value, names, units, column_index)
         if names[column_index]:
             comp.element = names[column_index]
         else:
-            sys.exit('No element has been specified in column: %s' % column_index)
+            raise ValueError('No element has been specified in column: %s' % column_index)
 
         if 'atomic' in units[column_index] or 'at' in units[column_index]:
             comp.actual_atomic_percent = composition_value
@@ -373,7 +376,7 @@ def add_actual_composition(systm, composition_value, names, units, column_index)
             comp.actual_weight_percent = composition_value
 
         else:
-            sys.exit('Please specify atomic or weight percent for the composition in column: %s\n' % column_index)
+            raise ValueError('Please specify atomic or weight percent for the composition in column: %s\n' % column_index)
 
         if systm.composition:
             systm.composition = listify(systm.composition)
@@ -403,7 +406,7 @@ def add_ideal_composition(systm, composition_value, names, units, column_index):
         if names[column_index]:
             comp.element = names[column_index]
         else:
-            sys.exit('No element has been specified in column: %s' % column_index)
+            raise ValueError('No element has been specified in column: %s' % column_index)
 
         if 'atomic' in units[column_index] or 'at' in units[column_index]:
             comp.ideal_atomic_percent = composition_value
@@ -412,7 +415,7 @@ def add_ideal_composition(systm, composition_value, names, units, column_index):
             comp.ideal_weight_percent = composition_value
 
         else:
-            sys.exit('Please specify atomic or weight percent for the composition in column: %s\n' % column_index)
+            raise ValueError('Please specify atomic or weight percent for the composition in column: %s\n' % column_index)
 
         if systm.composition:
             systm.composition = listify(systm.composition)
@@ -448,7 +451,7 @@ def add_ideal_quantity(systm, quantity_value, units, column_index):
             quant.ideal_number_percent = Scalar(value=quantity_value)
 
         else:
-            sys.exit('Please specify mass, volume or number percent for the quantity in column: %s\n' % column_index)
+            raise ValueError('Please specify mass, volume or number percent for the quantity in column: %s\n' % column_index)
 
         systm.quantity = quant
 
@@ -480,7 +483,7 @@ def add_actual_quantity(systm, quantity_value, units, column_index):
             quant.actual_number_percent = Scalar(value=quantity_value)
 
         else:
-            sys.exit('Please specify mass, volume or number percent for the quantity in column: %s\n' % column_index)
+            raise ValueError('Please specify mass, volume or number percent for the quantity in column: %s\n' % column_index)
 
         systm.quantity = quant
 
@@ -502,7 +505,7 @@ def add_newfile(systm, file_name, names, column_index):
     if names[column_index]:
         prop.name = names[column_index]
     else:
-        sys.exit(
+        raise ValueError(
             'No file name has been specified for column: %s. Every files column must have a name provided in the header row.\n' % (
                 column_index + 1))
 
@@ -538,7 +541,7 @@ def add_property(systm, property_value, names, units, column_index):
     if names[column_index]:
         prop.name = names[column_index]
     else:
-        sys.exit(
+        raise ValueError(
             'No property name has been specified for column: %s. Every property column must have a name provided in the header row.\n' % (
                 column_index + 1))
 
@@ -575,7 +578,7 @@ def add_preparation_step_detail(systm, preparation_step_detail, names, units, co
         if systm.preparation:
             step = systm.preparation[-1]
         else:
-            sys.exit(
+            raise ValueError(
                 'Preparation details were provided before a step name was given. A preparation step name must always be provided to the left of the details columns.\n')
 
         if step.details:
@@ -587,7 +590,7 @@ def add_preparation_step_detail(systm, preparation_step_detail, names, units, co
         if names[column_index]:
             detail.name = names[column_index]
         else:
-            sys.exit(
+            raise ValueError(
                 'No preparation step detail name has been specified for column: %s. Preparation step details mst have a name specified in the header row.\n' % (
                     column_index + 1))
 
@@ -620,7 +623,7 @@ def add_condition(systm, condition, names, units, column_index):
         if systm.properties:
             prop = systm.properties[-1]
         else:
-            sys.exit(
+            raise ValueError(
                 'Condition details were provided before a property was given. Condition columns must appear to the right of the property that they belong to.\n')
 
         if prop.conditions:
@@ -632,7 +635,7 @@ def add_condition(systm, condition, names, units, column_index):
         if names[column_index]:
             conditions.name = names[column_index]
         else:
-            sys.exit(
+            raise ValueError(
                 'No condition name has been specified for column: %s. Conditions must have a name specified in the header row.\n' % (
                     column_index + 1))
 
@@ -772,5 +775,35 @@ def add_identifier(systm, identifier, names, column_index):
             systm.ids.append(ident)
         else:
             systm.ids = [ident]
+
+    return systm
+
+
+def add_classification(systm, classification, names, column_index):
+    """
+    Adds an ID to a system
+
+    :param systm: system to update
+    :param classification: classification to add
+    :param names: list of names of the columns
+    :param column_index: index of the column to use
+    :return: updated system with classification info
+    """
+
+    if classification:
+
+        clss = Classification()
+        if names[column_index]:
+            clss.name = names[column_index]
+        else:
+            clss.name = 'Classification'
+
+        clss.value = classification
+
+        if systm.classifications:
+            systm.classifications = listify(systm.classifications)
+            systm.classifications.append(clss)
+        else:
+            systm.classifications = [clss]
 
     return systm
