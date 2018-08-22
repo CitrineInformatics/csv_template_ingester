@@ -56,7 +56,7 @@ def create_pif(headers, row):
 
     for item in sys_dict:
         if item != 'main':
-            if len(pif.dumps(sys_dict[item])):
+            if len([s for s in sys_dict[item].as_dictionary()]) > 1:
                 main_system.sub_systems.append(sys_dict[item])
 
     return main_system
