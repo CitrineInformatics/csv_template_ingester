@@ -24,7 +24,7 @@ def _check_table_size(table, cell_limit=100 * 100000 + 1):
             pif_count += 1
 
         if pif_count * col_count > cell_limit:
-            sys.exit(
+            raise ValueError(
                 'This ingester only supports up to {} cells (rows * columns).\nPlease split your file into smaller files and ingest each separately'.format(
                     cell_limit))
 
@@ -80,7 +80,7 @@ def convert(files=[], **kwargs):
                 table = get_data_from_tsv(input_file)
 
             else:
-                sys.exit('Filetype provided is not compatible with this parser. Please upload a .csv or .tsv file.\n')
+                raise IOError('Filetype provided is not compatible with this parser. Please upload a .csv or .tsv file.\n')
 
             if not _check_table_size(table, (100 * 100000 + 1)):
                 continue
