@@ -23,6 +23,12 @@ def test_get_keyword():
     assert keyword_two == 'NAME'
     assert column_header_two == ''
 
+def test_get_keyword_colon_count():
+    try:
+        keyword, syst, column_header = get_keyword('PROPERTY::: Test name (MPa)')
+    except:
+        keyword is None
+    assert keyword is None
 
 def test_get_system():
     syst, column_header = get_system('SYSTEM A PROPERTY: Hardness (HV)')
@@ -194,4 +200,3 @@ def test_create_list():
     lst = create_list('[1, 2, 3, 4]')
     assert len(lst) == 4
     assert lst[1] == '2'
-
