@@ -27,7 +27,7 @@ def test_get_keyword_colon_count():
     try:
         keyword, syst, column_header = get_keyword('PROPERTY::: Test name (MPa)')
     except:
-        keyword is None
+        keyword = None
     assert keyword is None
 
 def test_get_system():
