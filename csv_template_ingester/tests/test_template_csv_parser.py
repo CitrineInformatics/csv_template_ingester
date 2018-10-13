@@ -25,7 +25,7 @@ def test_get_keyword():
 
 def test_get_keyword_colon_count():
     """
-    Tests the expected ValueError from >2 colons in a header.
+    Tests the expected ValueError for >2 colons in the header.
     Test fails if ValueError not thrown
     """
     try:
