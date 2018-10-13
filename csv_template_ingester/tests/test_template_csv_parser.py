@@ -24,11 +24,16 @@ def test_get_keyword():
     assert column_header_two == ''
 
 def test_get_keyword_colon_count():
+    """
+    Tests the expected ValueError from >2 colons in a header.
+    Test fails if ValueError not thrown
+    """
     try:
         keyword, syst, column_header = get_keyword('PROPERTY::: Test name (MPa)')
-    except:
-        keyword = None
-    assert keyword is None
+    except ValueError:
+        keyword = '>2_colons'
+    else:
+        assert keyword == '>2_colons', "ValueError was not raised"
 
 def test_get_system():
     syst, column_header = get_system('SYSTEM A PROPERTY: Hardness (HV)')
