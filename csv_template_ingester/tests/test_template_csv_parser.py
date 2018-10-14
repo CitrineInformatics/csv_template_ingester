@@ -23,6 +23,17 @@ def test_get_keyword():
     assert keyword_two == 'NAME'
     assert column_header_two == ''
 
+def test_get_keyword_colon_count():
+    """
+    Tests the expected ValueError for >2 colons in the header.
+    Test fails if ValueError not thrown
+    """
+    try:
+        keyword, syst, column_header = get_keyword('PROPERTY::: Test name (MPa)')
+    except ValueError:
+        pass
+    else:
+        assert False, "ValueError was not raised"
 
 def test_get_system():
     syst, column_header = get_system('SYSTEM A PROPERTY: Hardness (HV)')
@@ -194,4 +205,3 @@ def test_create_list():
     lst = create_list('[1, 2, 3, 4]')
     assert len(lst) == 4
     assert lst[1] == '2'
-
