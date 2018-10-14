@@ -31,9 +31,9 @@ def test_get_keyword_colon_count():
     try:
         keyword, syst, column_header = get_keyword('PROPERTY::: Test name (MPa)')
     except ValueError:
-        keyword = '>2_colons'
+        pass
     else:
-        assert keyword == '>2_colons', "ValueError was not raised"
+        assert False, "ValueError was not raised"
 
 def test_get_system():
     syst, column_header = get_system('SYSTEM A PROPERTY: Hardness (HV)')
