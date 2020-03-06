@@ -9,7 +9,8 @@ setup(name='csv_template_ingester',
     packages=find_packages(),
     install_requires=[
         'pypif>=2.1.0,<3',
-        'xlrd'
+        'xlrd',
+        'pytest'
     ],
     entry_points={
         'citrine.dice.converter': [
