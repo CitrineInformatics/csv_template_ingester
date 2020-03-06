@@ -1,5 +1,6 @@
 from csv_template_ingester.template_csv_parser import *
 from pypif.obj import *
+import pytest
 
 
 def test_get_units():
@@ -156,6 +157,27 @@ def test_add_property():
     assert syst.properties[0].name == 'Hardness'
     assert syst.properties[0].scalars == ['1200']
     assert syst.properties[0].units == 'HV'
+
+    syst = add_property(ChemicalSystem(), 'range(+140, 165)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars.minimum == 140
+    assert syst.properties[0].scalars.maximum == 165
+    assert syst.properties[0].units == 'degC'
+
+    syst = add_property(ChemicalSystem(), 'range(0.140E+3, 16500E-2)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars.minimum == 140
+    assert syst.properties[0].scalars.maximum == 165
+    assert syst.properties[0].units == 'degC'
+
+    syst = add_property(ChemicalSystem(), 'range(-.165E3, -14000E-2)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars.minimum == -165
+    assert syst.properties[0].scalars.maximum == -140
+    assert syst.properties[0].units == 'degC'
+
+    with pytest.raises(ValueError):
+        add_property(ChemicalSystem(), 'range(+.165E3, -14000E-2)', ['Melting Temperature'], ['degC'], 0)
 
 
 def test_create_person():
