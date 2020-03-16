@@ -530,7 +530,8 @@ def add_property(systm, property_value, names, units, column_index):
     Adds a property to a system
 
     :param systm: system object to add the property to
-    :param property_value: property to add
+    :param property_value: property to add. There are special syntaxes for:
+        - minimum/maximum values: `range(min, max)` where min and max will be assigned to scalar.minimum and scalar.maximum, respectively.
     :param names: list of names from the header row
     :param units: list of units from the header row
     :param column_index: index of the current column
