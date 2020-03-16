@@ -550,8 +550,8 @@ def add_property(systm, property_value, names, units, column_index):
     if not property_value:
         return systm
 
-    if isinstance(property_value, str) and re.match(range_pattern, property_value):
-        min_max = re.match(range_pattern, property_value).groupdict()
+    if isinstance(property_value, str) and re.match(range_pattern, property_value, re.IGNORECASE):
+        min_max = re.match(range_pattern, property_value, re.IGNORECASE).groupdict()
         minimum = float(min_max["min"])
         maximum = float(min_max["max"])
         if minimum > maximum:
