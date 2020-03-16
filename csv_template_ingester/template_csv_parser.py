@@ -556,7 +556,7 @@ def add_property(systm, property_value, names, units, column_index):
         maximum = float(min_max["max"])
         if minimum > maximum:
             raise ValueError("Minimum ({}) cannot be greater than maximum ({})".format(minimum, maximum))
-        prop.scalars = Scalar(minimum=minimum, maximum=maximum)
+        prop.scalars = [Scalar(minimum=minimum, maximum=maximum)]
     else:
         property_value = listify(property_value)
         prop.scalars = property_value
