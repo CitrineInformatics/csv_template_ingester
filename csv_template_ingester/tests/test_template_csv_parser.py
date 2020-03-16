@@ -176,6 +176,12 @@ def test_add_property():
     assert syst.properties[0].scalars.maximum == -140
     assert syst.properties[0].units == 'degC'
 
+    syst = add_property(ChemicalSystem(), 'RaNgE(-.165E3, -14000e-2)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars.minimum == -165
+    assert syst.properties[0].scalars.maximum == -140
+    assert syst.properties[0].units == 'degC'
+
     with pytest.raises(ValueError):
         add_property(ChemicalSystem(), 'range(+.165E3, -14000E-2)', ['Melting Temperature'], ['degC'], 0)
 
