@@ -20,6 +20,8 @@ def test_convert():
     assert pifs_two[0].properties[2].name == 'SMILES'
     assert pifs_two[0].properties[2].scalars[0] == '[C]'
     assert pifs_two[0].names[1] == 'Sample 1'
-    assert len(pifs_two[0].properties) == 3
+    assert len(pifs_two[0].properties) == 4
     assert pifs_two[0].properties[1].name == 'Strength (Tensile)'
     assert pifs_two[0].properties[1].scalars[0] == '456'
+    assert pifs_two[0].properties[-1].scalars[0].minimum == 453
+    assert pifs_two[0].properties[-1].scalars[0].maximum == 474
