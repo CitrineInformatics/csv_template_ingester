@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='csv_template_ingester',
-    version='1.1.0',
+    version='1.1.1',
     url='http://github.com/CitrineInformatics/csv_template_ingester',
     description='Converts a specialized CSV/XLSX or XLS file to a physical information file.',
     author='Jo Hill',
