@@ -530,12 +530,15 @@ def add_property(systm, property_value, names, units, column_index):
     Adds a property to a system
 
     :param systm: system object to add the property to
-    :param property_value: property to add
+    :param property_value: property to add. There are special syntaxes for:
+        - minimum/maximum values: `range(min, max)` where min and max will be assigned to scalar.minimum and scalar.maximum, respectively.
     :param names: list of names from the header row
     :param units: list of units from the header row
     :param column_index: index of the current column
     :return: system updated with the property info
     """
+
+    range_pattern = r"^\s*range\(\s*(?P<min>([-+]?(\d*\.\d+|\d+\.?)([eE][-+]?\d+)?))\s*,\s*(?P<max>([-+]?(\d*\.\d+|\d+\.?)([eE][-+]?\d+)?))\s*\)\s*$"
 
     prop = Property()
     if names[column_index]:
@@ -548,8 +551,16 @@ def add_property(systm, property_value, names, units, column_index):
     if not property_value:
         return systm
 
-    property_value = listify(property_value)
-    prop.scalars = property_value
+    if isinstance(property_value, str) and re.match(range_pattern, property_value, re.IGNORECASE):
+        min_max = re.match(range_pattern, property_value, re.IGNORECASE).groupdict()
+        minimum = float(min_max["min"])
+        maximum = float(min_max["max"])
+        if minimum > maximum:
+            raise ValueError("Minimum ({}) cannot be greater than maximum ({})".format(minimum, maximum))
+        prop.scalars = [Scalar(minimum=minimum, maximum=maximum)]
+    else:
+        property_value = listify(property_value)
+        prop.scalars = property_value
 
     if units[column_index]:
         prop.units = units[column_index]
