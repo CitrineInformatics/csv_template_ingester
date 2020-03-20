@@ -1,5 +1,6 @@
 from csv_template_ingester.template_csv_parser import *
 from pypif.obj import *
+import pytest
 
 
 def test_get_units():
@@ -23,6 +24,17 @@ def test_get_keyword():
     assert keyword_two == 'NAME'
     assert column_header_two == ''
 
+def test_get_keyword_colon_count():
+    """
+    Tests the expected ValueError for >2 colons in the header.
+    Test fails if ValueError not thrown
+    """
+    try:
+        keyword, syst, column_header = get_keyword('PROPERTY::: Test name (MPa)')
+    except ValueError:
+        pass
+    else:
+        assert False, "ValueError was not raised"
 
 def test_get_system():
     syst, column_header = get_system('SYSTEM A PROPERTY: Hardness (HV)')
@@ -146,6 +158,33 @@ def test_add_property():
     assert syst.properties[0].scalars == ['1200']
     assert syst.properties[0].units == 'HV'
 
+    syst = add_property(ChemicalSystem(), 'range(+140, 165)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars[0].minimum == 140
+    assert syst.properties[0].scalars[0].maximum == 165
+    assert syst.properties[0].units == 'degC'
+
+    syst = add_property(ChemicalSystem(), 'range(0.140E+3, 16500E-2)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars[0].minimum == 140
+    assert syst.properties[0].scalars[0].maximum == 165
+    assert syst.properties[0].units == 'degC'
+
+    syst = add_property(ChemicalSystem(), 'range(-.165E3, -14000E-2)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars[0].minimum == -165
+    assert syst.properties[0].scalars[0].maximum == -140
+    assert syst.properties[0].units == 'degC'
+
+    syst = add_property(ChemicalSystem(), 'RaNgE(-.165E3, -14000e-2)', ['Melting Temperature'], ['degC'], 0)
+    assert syst.properties[0].name == 'Melting Temperature'
+    assert syst.properties[0].scalars[0].minimum == -165
+    assert syst.properties[0].scalars[0].maximum == -140
+    assert syst.properties[0].units == 'degC'
+
+    with pytest.raises(ValueError):
+        add_property(ChemicalSystem(), 'range(+.165E3, -14000E-2)', ['Melting Temperature'], ['degC'], 0)
+
 
 def test_create_person():
     new_person = create_person('Jo Hill', ['name'], 0)
@@ -194,4 +233,3 @@ def test_create_list():
     lst = create_list('[1, 2, 3, 4]')
     assert len(lst) == 4
     assert lst[1] == '2'
-
